@@ -58,7 +58,6 @@ public class ScalarisClient extends DB {
 			ts = new TransactionSingleOp(conn);
 			rdht = new ReplicatedDHT(conn);
 		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
