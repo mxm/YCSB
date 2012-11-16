@@ -13,21 +13,22 @@
   
   
   <dependencies>
+     <!--- We don't need those because of the addjars plugin
      <dependency>
        <groupId>de.zib.scalaris</groupId>
-       <artifactId>scalaris-all</artifactId>
-       <version>2.0.0</version>
+       <artifactId>scalaris</artifactId>
+       <version>0.5.0</version>
      </dependency>
      <dependency>
        <groupId>org.erlang.otp</groupId>
        <artifactId>jinterface</artifactId>
-       <version>1.5.6</version>
+       <version>1.5.6-custom</version>
      </dependency>
      <dependency>
        <groupId>com.yahoo.ycsb</groupId>
        <artifactId>core</artifactId>
        <version>${project.version}</version>
-     </dependency>
+     </dependency>-->
   </dependencies>
   
   <build>
@@ -51,7 +52,25 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+	<groupId>com.googlecode.addjars-maven-plugin</groupId>
+	<artifactId>addjars-maven-plugin</artifactId>
+	<version>1.0.4</version>
+	<executions>
+	    <execution>
+		<goals>
+		    <goal>add-jars</goal>
+		</goals>
+		<configuration>
+		    <resources>
+			<resource>
+			    <directory>${basedir}/lib</directory>
+			</resource>
+		    </resources>
+		</configuration>
+	    </execution>
+	</executions>
+      </plugin>
     </plugins>
   </build>
-	
 </project>
