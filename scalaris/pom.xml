@@ -13,8 +13,8 @@
   
   
   <dependencies>
-     <!--- We don't need those because of the addjars plugin
-     <dependency>
+<!-- not needed because of addjars plugin
+    <dependency>
        <groupId>de.zib.scalaris</groupId>
        <artifactId>scalaris</artifactId>
        <version>0.5.0</version>
@@ -24,11 +24,12 @@
        <artifactId>jinterface</artifactId>
        <version>1.5.6-custom</version>
      </dependency>
+-->
      <dependency>
        <groupId>com.yahoo.ycsb</groupId>
        <artifactId>core</artifactId>
        <version>${project.version}</version>
-     </dependency>-->
+     </dependency>
   </dependencies>
   
   <build>
