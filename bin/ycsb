@@ -40,6 +40,7 @@ DATABASES = {
     "nosqldb"      : "com.yahoo.ycsb.db.NoSqlDbClient",
     "orientdb"     : "com.yahoo.ycsb.db.OrientDBClient",
     "redis"        : "com.yahoo.ycsb.db.RedisClient", 
+    "scalaris"     : "com.yahoo.ycsb.db.ScalarisClient",
     "voldemort"    : "com.yahoo.ycsb.db.VoldemortClient", 
 }
 
@@ -84,6 +85,7 @@ def find_jars(dir, database):
                 filename.startswith(database.split("-")[0]) or \
                 not "binding" in filename):
                 jars.append(os.path.join(dirpath, filename))
+    print jars
     return jars
 
 def get_ycsb_home():
