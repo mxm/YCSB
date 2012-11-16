@@ -7,6 +7,7 @@ package com.yahoo.ycsb.db;
 
 import com.ericsson.otp.erlang.OtpErlangBinary;
 import com.ericsson.otp.erlang.OtpErlangException;
+import com.ericsson.otp.erlang.OtpErlangInt;
 import com.ericsson.otp.erlang.OtpErlangList;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangString;
@@ -34,15 +35,28 @@ import de.zib.scalaris.*;
 
 public class ScalarisClient extends DB {
 
-	public static final String HOST_PROPERTY = "scalaris.host";
-	public static final String PORT_PROPERTY = "scalaris.port";
+	public static final String HOST_PROPERTY = "scalaris.node";
+	public static final String CLIENT_NAME_PROPERTY = "scalaris.name";
+	public static final String COOKIE_PROPERTY = "scalaris.cookie";
+
 	public static final String TABLE_SEPERATOR = ":";
 
+	private Connection conn;
 	private TransactionSingleOp ts;
+	private ReplicatedDHT rdht;
 
 	public void init() {
 		try {
-			ts = new TransactionSingleOp();
+			Properties props = this.getProperties();
+			if (props.isEmpty()) {
+				props.setProperty(HOST_PROPERTY, "node1@localhost");
+				props.setProperty(CLIENT_NAME_PROPERTY, "YCSB");
+				props.setProperty(COOKIE_PROPERTY, "chocolate chip cookie");
+			}
+			ConnectionFactory fac = new ConnectionFactory(props);
+			conn = fac.createConnection();
+			ts = new TransactionSingleOp(conn);
+			rdht = new ReplicatedDHT(conn);
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -53,22 +67,22 @@ public class ScalarisClient extends DB {
 		ts.closeConnection();
 	}
 
-
 	@Override
 	public int read(String table, String key, Set<String> fields,
 			HashMap<String, ByteIterator> result) {
 
 		try {
 			// get the value
-			Map<String, Object> dbValues =  ts.read(table + TABLE_SEPERATOR + key).jsonValue();
+			Map<String, Object> dbValues = ts.read(
+					table + TABLE_SEPERATOR + key).jsonValue();
 			// jsonValue() returns Map<String, Object> but we need
 			// Map<String, ByteIterator>
 			for (Entry<String, Object> entry : dbValues.entrySet()) {
-				result.put(entry.getKey(), new StringByteIterator((String) entry.getValue()));
+				result.put(entry.getKey(), new StringByteIterator(
+						(String) entry.getValue()));
 			}
 		} catch (NotFoundException e) {
 		} catch (OtpErlangException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 1;
 		}
@@ -89,7 +103,6 @@ public class ScalarisClient extends DB {
 		try {
 			ts.write(table + TABLE_SEPERATOR + key, values2);
 		} catch (OtpErlangException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 1;
 		}
@@ -100,14 +113,14 @@ public class ScalarisClient extends DB {
 	public int delete(String table, String key) {
 
 		try {
-			// Erlang delete is not save
-			ts.write(table + TABLE_SEPERATOR + key, "-1");
+			// Erlang delete is not save, so we check if the key
+			// was deleted on all four replicas
+			if(rdht.delete(table + TABLE_SEPERATOR + key) != 4)
+				return 1;		
 		} catch (OtpErlangException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 1;
 		}
-
 		return 0;
 	}
 
@@ -118,11 +131,11 @@ public class ScalarisClient extends DB {
 	 */
 	public int update(String table, String key,
 			HashMap<String, ByteIterator> values) {
-		// Convert <String, ByteIterator> to <String, byte[]>
+		// Convert <String, ByteIterator> to <String, String>
 		HashMap<String, String> values2 = new HashMap<String, String>(
 				values.size());
 		for (Entry<String, ByteIterator> entry : values.entrySet()) {
-			values2.put(entry.getKey(), entry.getValue().toString());
+			values2.put(entry.getKey(), entry.getValue().toArray().toString());
 		}
 
 		// jsonValue() returns Map<String, Object> but we need
@@ -135,7 +148,7 @@ public class ScalarisClient extends DB {
 			for (Entry<String, Object> entry : dbValues.entrySet()) {
 				dbValues2.put(entry.getKey(), (String) entry.getValue());
 			}
-		} catch (NotFoundException e){
+		} catch (NotFoundException e) {
 		} catch (OtpErlangException e) {
 			e.printStackTrace();
 		}
@@ -146,7 +159,6 @@ public class ScalarisClient extends DB {
 		try {
 			ts.write(table + TABLE_SEPERATOR + key, dbValues2);
 		} catch (OtpErlangException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 1;
 		}
@@ -159,5 +171,4 @@ public class ScalarisClient extends DB {
 		/* Scalaris doesn't support scan semantics (sorry) */
 		return 1;
 	}
-
 }
