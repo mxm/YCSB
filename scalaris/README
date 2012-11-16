@@ -1,0 +1,3 @@
+Test Scalaris using workload A:
+
+bin/ycsb load scalaris -P workloads/workloada

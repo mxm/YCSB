@@ -85,7 +85,6 @@ def find_jars(dir, database):
                 filename.startswith(database.split("-")[0]) or \
                 not "binding" in filename):
                 jars.append(os.path.join(dirpath, filename))
-    print jars
     return jars
 
 def get_ycsb_home():
