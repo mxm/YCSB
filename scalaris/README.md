@@ -1,9 +1,11 @@
-= Scalaris YCSB Client =
+Scalaris YCSB Client
+====================
 
 The Scalaris client is not yet part of the official YCSB bundle but a fork of
 YCSB with the necessary implementation is available on GitHub.
 
-== Compile ==
+Compile
+-------
 
 Check out the fork of YCSB with branch scalaris:
 
@@ -14,12 +16,14 @@ Build with Maven:
 	cd YCSB
 	mvn package
 
-== Run ==
+Run
+---
 
 	./bin/ycsb load scalaris -P workloads/workloada
 	./bin/ycsb run scalaris -P workloads/workloada
 
-== Troubleshooting ==
+Troubleshooting
+---------------
 
 If you're experiencing problems, first make sure Scalaris is running. You can pass configuration parameters to YCBS. For instance, if your first Scalaris node is node1@localhost, the configuration looks as follows:
 
