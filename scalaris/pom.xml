@@ -13,7 +13,6 @@
   
   
   <dependencies>
-<!-- not needed because of addjars plugin
     <dependency>
        <groupId>de.zib.scalaris</groupId>
        <artifactId>scalaris</artifactId>
@@ -24,13 +23,20 @@
        <artifactId>jinterface</artifactId>
        <version>1.5.6-custom</version>
      </dependency>
--->
      <dependency>
        <groupId>com.yahoo.ycsb</groupId>
        <artifactId>core</artifactId>
        <version>${project.version}</version>
      </dependency>
   </dependencies>
+
+  <repositories>
+      <repository>
+          <id>scalaris-repo</id>
+          <url>https://scalaris.googlecode.com/svn/maven/</url>
+      </repository>
+  </repositories>
+
   
   <build>
     <plugins>
@@ -53,25 +59,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-	<groupId>com.googlecode.addjars-maven-plugin</groupId>
-	<artifactId>addjars-maven-plugin</artifactId>
-	<version>1.0.4</version>
-	<executions>
-	    <execution>
-		<goals>
-		    <goal>add-jars</goal>
-		</goals>
-		<configuration>
-		    <resources>
-			<resource>
-			    <directory>${basedir}/lib</directory>
-			</resource>
-		    </resources>
-		</configuration>
-	    </execution>
-	</executions>
-      </plugin>
-    </plugins>
+     </plugins>
   </build>
 </project>
