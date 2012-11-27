@@ -6,16 +6,15 @@
      <artifactId>root</artifactId>
      <version>0.1.4</version>
   </parent>
-  
+
   <artifactId>scalaris-binding</artifactId>
   <name>Scalaris DB Binding</name>
   <packaging>jar</packaging>
-  
-  
+
   <dependencies>
     <dependency>
        <groupId>de.zib.scalaris</groupId>
-       <artifactId>scalaris</artifactId>
+       <artifactId>java-api</artifactId>
        <version>0.5.0</version>
      </dependency>
      <dependency>
@@ -33,11 +32,10 @@
   <repositories>
       <repository>
           <id>scalaris-repo</id>
-          <url>https://scalaris.googlecode.com/svn/maven/</url>
+          <url>https://scalaris.googlecode.com/svn/maven</url>
       </repository>
   </repositories>
 
-  
   <build>
     <plugins>
      <plugin>
