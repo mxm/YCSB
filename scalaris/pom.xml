@@ -15,12 +15,12 @@
     <dependency>
        <groupId>de.zib.scalaris</groupId>
        <artifactId>java-api</artifactId>
-       <version>0.6.0</version>
+       <version>[0.5.0,)</version>
      </dependency>
      <dependency>
        <groupId>org.erlang.otp</groupId>
        <artifactId>jinterface</artifactId>
-       <version>1.5.8</version>
+       <version>[1.5.6-custom,)</version>
      </dependency>
      <dependency>
        <groupId>com.yahoo.ycsb</groupId>
